@@ -60,7 +60,7 @@ WHERE
   ) IS NOT NULL;
 INSERT INTO car_shop.cars (model_id, color_id) 
 SELECT 
-  cm.id AS model_id, 
+  DISTINCT cm.id AS model_id, 
   c.id AS color_id 
 FROM 
   raw_data.sales ts 
@@ -93,7 +93,9 @@ INSERT INTO car_shop.sales (
   discount_id
 ) 
 SELECT 
-  car.id AS car_id, 
+  DISTINCT ON (
+    ts.auto, ts.person_name, ts.phone
+  ) car.id AS car_id, 
   c.id AS customer_id, 
   ts.date :: DATE, 
   ts.price, 
